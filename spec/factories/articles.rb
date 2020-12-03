@@ -28,6 +28,9 @@
 
 FactoryBot.define do
   factory :article do
-    
+    uuid  { SecureRandom.uuid }
+    slug  { 'TestSlug' }
+    title { 'TestTitle' }
+    state { 'draft' }
   end
 end
