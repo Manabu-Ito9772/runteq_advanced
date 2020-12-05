@@ -14,7 +14,22 @@ RSpec.describe "AdminArticlesPreviews", type: :system do
         click_link '画像'
         click_link 'プレビュー'
         switch_to_window(windows.last)
-        expect(current_path).to eq admin_article_preview_path(article.uuid)
+        expect(page).to have_title('[Preview]TestTitle | Blog'), 'プレビューページが正しく表示されていません'
+      end
+    end
+  end
+
+  describe '記事編集画面で文章ブロックを追加' do
+    context '文章を記入せずにプレビューを閲覧' do
+      it '正常にプレビューが表示される' do
+        login_as(user)
+        click_link '記事'
+        click_link '編集'
+        click_link 'ブロックを追加する'
+        click_link '文章'
+        click_link 'プレビュー'
+        switch_to_window(windows.last)
+        expect(page).to have_title('[Preview]TestTitle | Blog'), 'プレビューページが正しく表示されていません'
       end
     end
   end
