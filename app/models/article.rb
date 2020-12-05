@@ -71,6 +71,7 @@ class Article < ApplicationRecord
       result << if article_block.sentence?
                   sentence = article_block.blockable
                   return '' if sentence.body.nil?
+                  
                   sentence.body
                 elsif article_block.medium?
                   medium = ActiveDecorator::Decorator.instance.decorate(article_block.blockable)
