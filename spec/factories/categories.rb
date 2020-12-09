@@ -18,6 +18,8 @@
 
 FactoryBot.define do
   factory :category do
-    
+    type { 'Category' }
+    sequence(:name) { |n| "TestCategory#{n}" }
+    sequence(:slug) { |n| "TestCategory#{n}" }
   end
 end

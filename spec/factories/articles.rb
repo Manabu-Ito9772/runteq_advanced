@@ -29,8 +29,19 @@
 FactoryBot.define do
   factory :article do
     uuid  { SecureRandom.uuid }
-    slug  { 'TestSlug' }
-    title { 'TestTitle' }
+    sequence(:slug) { |n| "TestSlug#{n}" }
+    sequence(:title) { |n| "TestTitle#{n}" }
     state { 'draft' }
+    category
+
+    trait :future do
+      state { 'published' }
+      published_at { DateTime.now.since(1.hours) }
+    end
+
+    trait :past do
+      state { 'publish_wait' }
+      published_at { DateTime.now.ago(1.hours) }
+    end
   end
 end
