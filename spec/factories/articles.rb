@@ -32,14 +32,16 @@ FactoryBot.define do
     uuid  { SecureRandom.uuid }
     sequence(:slug) { |n| "TestSlug#{n}" }
     sequence(:title) { |n| "Title#{n}" }
-    sequence(:body) { |n| "TestBody#{n}" }
     category
-    association :author
 
-    trait :with_tags do
+    trait :with_tag do
       after(:create) do |article|
         create(:tag, articles: [article])
       end
+    end
+
+    trait :with_author do
+      association :author
     end
 
     trait :draft do
@@ -54,6 +56,16 @@ FactoryBot.define do
     trait :past do
       state { 'publish_wait' }
       published_at { DateTime.now.ago(1.hours) }
+    end
+
+    trait :with_sentence do
+      transient do
+        sequence(:sentence_body) { |n| "test_body_#{n}" }
+      end
+
+      after(:build) do |article, evaluator|
+        article.sentences << create(:sentence, body: evaluator.sentence_body)
+      end
     end
   end
 end

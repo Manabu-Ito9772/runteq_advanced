@@ -5,45 +5,60 @@ RSpec.describe "AdminArticles", type: :system do
   let(:draft_article) { create(:article, :draft) }
   let(:future_article) { create(:article, :future) }
   let(:past_article) { create(:article, :past) }
+  let(:articles_with_tags) { create_list(:article, 2, :with_tag) }
+  let(:articles_with_authors) { create_list(:article, 2, :with_author) }
+  let(:article_with_sentence) { create(:article, :with_sentence, sentence_body: 'Sample') }
+  let(:article_with_another_sentence) { create(:article, :with_sentence, sentence_body: 'Title') }
   before { login_as(user) }
 
+  let(:draft_article_with_sentence) { create(:article, :draft, :with_sentence, sentence_body: '基礎編アプリの記事') }
+  let(:draft_article_with_another_sentence) { create(:article, :draft, :with_sentence, sentence_body: '応用編アプリの記事')}
+
   describe '記事一覧画面' do
-    let!(:article_with_tags) { create_list(:article, 3, :with_tags) }
     context 'セレクトボックスでタグを選んで記事を検索' do
       it '該当するタグを持つ記事が全て表示される' do
+        articles_with_tags
         visit admin_articles_path
         select 'Tag1', from: 'q[tag_id]'
         click_button '検索'
         expect(page).to have_select('q[tag_id]', selected: 'Tag1')
         expect(find('.box-body')).to have_content('Tag1')
         expect(find('.box-body')).to_not have_content('Tag2')
-        expect(find('.box-body')).to_not have_content('Tag3')
       end
     end
 
     context 'セレクトボックスで著者を選んで記事を検索' do
       it '該当する著者を持つ記事が全て表示される' do
+        articles_with_authors
         visit admin_articles_path
-        select 'Author7', from: 'q[author_id]'
+        select 'Author1', from: 'q[author_id]'
         click_button '検索'
-        expect(page).to have_select('q[author_id]', selected: 'Author7')
-        expect(find('.box-body')).to have_content('Author7')
-        expect(find('.box-body')).to_not have_content('Author8')
-        expect(find('.box-body')).to_not have_content('Author9')
+        expect(page).to have_select('q[author_id]', selected: 'Author1')
+        expect(find('.box-body')).to have_content('Author1')
+        expect(find('.box-body')).to_not have_content('Author2')
       end
     end
 
     context 'フリーワードで本文を検索' do
       it '本文に検索されたワードを含む記事を全て表示' do
-        create(:article, body: 'Sample')
+        article_with_sentence
+        article_with_another_sentence
         visit admin_articles_path
         fill_in 'q[body]', with: 'Sample'
         click_button '検索'
-        expect(find('.box-body')).to have_content('Title13')
-        expect(find('.box-body')).to_not have_content('Title10')
-        expect(find('.box-body')).to_not have_content('Title11')
-        expect(find('.box-body')).to_not have_content('Title12')
+        expect(find('.box-body')).to have_content(article_with_sentence.title)
+        expect(find('.box-body')).to_not have_content(article_with_another_sentence.title)
       end
+    end
+
+    it '下書き状態の記事について、本文で絞り込み検索ができること' do
+      draft_article_with_sentence
+      draft_article_with_another_sentence
+      visit admin_articles_path
+      fill_in 'q[body]', with: '基礎編アプリ'
+      click_button '検索'
+      expect(page).to have_content(draft_article_with_sentence.title)
+      expect(page).not_to have_content(draft_article_with_another_sentence.title)
     end
   end
 

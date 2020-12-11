@@ -8,7 +8,7 @@ describe 'article_state:update_article_state' do
    create(:article, state: :draft)
  end
 
- fit 'update_to_published' do
+ it 'update_to_published' do
    expect { task.invoke }.to change { Article.published.size }.from(0).to(1)
  end
 end

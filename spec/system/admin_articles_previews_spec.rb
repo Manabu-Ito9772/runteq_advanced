@@ -14,7 +14,7 @@ RSpec.describe "AdminArticlesPreviews", type: :system do
         click_link '画像'
         click_link 'プレビュー'
         switch_to_window(windows.last)
-        expect(page).to have_title('[Preview]TestTitle | Blog'), 'プレビューページが正しく表示されていません'
+        expect(page).to have_content(article.title), 'プレビューページが正しく表示されていません'
       end
     end
   end
@@ -29,7 +29,7 @@ RSpec.describe "AdminArticlesPreviews", type: :system do
         click_link '文章'
         click_link 'プレビュー'
         switch_to_window(windows.last)
-        expect(page).to have_title('[Preview]TestTitle | Blog'), 'プレビューページが正しく表示されていません'
+        expect(page).to have_title(article.title), 'プレビューページが正しく表示されていません'
       end
     end
   end
