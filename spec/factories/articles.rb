@@ -28,11 +28,23 @@
 
 FactoryBot.define do
   factory :article do
+    sequence(:id) { |n| "#{n}" }
     uuid  { SecureRandom.uuid }
     sequence(:slug) { |n| "TestSlug#{n}" }
-    sequence(:title) { |n| "TestTitle#{n}" }
-    state { 'draft' }
+    sequence(:title) { |n| "Title#{n}" }
+    sequence(:body) { |n| "TestBody#{n}" }
     category
+    association :author
+
+    trait :with_tags do
+      after(:create) do |article|
+        create(:tag, articles: [article])
+      end
+    end
+
+    trait :draft do
+      state { 'draft' }
+    end
 
     trait :future do
       state { 'published' }
