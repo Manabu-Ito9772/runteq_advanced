@@ -2,6 +2,8 @@ require 'rails_helper'
 
 RSpec.describe "AdminArticles", type: :system do
   let(:user) { create(:user) }
+  let(:editor) { create(:user, :editor) }
+  let(:writer) { create(:user, :writer) }
   let(:draft_article) { create(:article, :draft) }
   let(:future_article) { create(:article, :future) }
   let(:past_article) { create(:article, :past) }
@@ -9,12 +11,11 @@ RSpec.describe "AdminArticles", type: :system do
   let(:articles_with_authors) { create_list(:article, 2, :with_author) }
   let(:article_with_sentence) { create(:article, :with_sentence, sentence_body: 'Sample') }
   let(:article_with_another_sentence) { create(:article, :with_sentence, sentence_body: 'Title') }
-  before { login_as(user) }
-
   let(:draft_article_with_sentence) { create(:article, :draft, :with_sentence, sentence_body: '基礎編アプリの記事') }
   let(:draft_article_with_another_sentence) { create(:article, :draft, :with_sentence, sentence_body: '応用編アプリの記事')}
 
   describe '記事一覧画面' do
+    before { login_as(user) }
     context 'セレクトボックスでタグを選んで記事を検索' do
       it '該当するタグを持つ記事が全て表示される' do
         articles_with_tags
@@ -63,6 +64,7 @@ RSpec.describe "AdminArticles", type: :system do
   end
 
   describe '記事編集画面' do
+    before { login_as(user) }
     context 'ステータスが「下書き状態以外」かつ、公開日時を「未来の日付」に設定して「更新する」を押す' do
       it 'ステータスを「公開待ち」に変更して「更新しました」とフラッシュメッセージを表示' do
         visit edit_admin_article_path(future_article.uuid)
@@ -105,6 +107,35 @@ RSpec.describe "AdminArticles", type: :system do
         click_link '公開する'
         expect(page).to have_select('状態', selected: '公開')
         expect(page).to have_content('記事を公開しました')
+      end
+    end
+  end
+
+  describe '権限設定' do
+    before { login_as(writer) }
+    before { user }
+    context 'ライターでログイン' do
+      it 'サイドバーにカテゴリー・タグ・著者が表示されない' do
+        expect(page).to_not have_content('カテゴリー')
+        expect(page).to_not have_content('タグ')
+        expect(page).to_not have_content('著者')
+      end
+
+      it 'ライター以外のユーザーの編集ができない' do
+        click_link 'ユーザー'
+        click_link 'admin'
+        expect(page).to_not have_content('更新')
+      end
+
+      it 'ライター以外のユーザーを削除できない' do
+        click_link 'ユーザー'
+        expect(page).to_not have_content('削除')
+      end
+
+      it '権限エラーが発生した場合403エラーページを返す' do
+        visit admin_categories_path
+        expect(page).to have_content('権限がありません')
+        page.save_screenshot 'screenshot.png'
       end
     end
   end

@@ -18,16 +18,18 @@
 
 FactoryBot.define do
   factory :user do
-    sequence(:name)  { |n| "TestName#{n}" }
+    name  { 'admin' }
     password         { 'password' }
     password_confirmation { 'password' }
     role             { 'admin' }
 
     trait :editor do
+      name { 'editor' }
       role { 'editor' }
     end
 
     trait :writer do
+      name { 'writer' }
       role { 'writer' }
     end
   end
