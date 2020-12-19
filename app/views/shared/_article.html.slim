@@ -6,8 +6,14 @@
       = l(article.published_at? ? article.published_at.to_date : Time.current.to_date, format: '%Y年%-m月%-d日')
 
   - if article.eye_catch.attached?
-    section.eye_catch
-      = image_tag article.eye_catch_url(:lg), class: 'img-fluid'
+    .mx-auto
+      section.eye_catch
+        - if article.eyecatch_center?
+          = image_tag article.eyecatch_resize, class: 'd-block mx-auto img-fluid'
+        - elsif article.eyecatch_right?
+          = image_tag article.eyecatch_resize, class: 'd-block ml-auto img-fluid'
+        - else
+          = image_tag article.eyecatch_resize, class: 'img-fluid'
 
   - if article.category.present?
     section.category

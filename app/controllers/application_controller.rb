@@ -4,8 +4,6 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
-  rescue_from Pundit::NotAuthorizedError, with: :render_403
-
   before_action :require_login
   before_action :current_site
   before_action :init_components
@@ -55,9 +53,5 @@ class ApplicationController < ActionController::Base
       new_arrivals: true,
       categories: true
     }
-  end
-
-  def render_403
-    render file: Rails.root.join('public/403.html'), status: :forbidden, layout: false, content_type: 'text/html'
   end
 end

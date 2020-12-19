@@ -40,12 +40,14 @@ class Article < ApplicationRecord
   has_one_attached :eye_catch
 
   enum state: { draft: 0, published: 1, publish_wait: 2 }
+  enum eyecatch_position: { eyecatch_left: 0, eyecatch_center: 1, eyecatch_right: 2 }
 
   validates :slug, slug_format: true, uniqueness: true, length: { maximum: 255 }, allow_blank: true
   validates :title, presence: true, uniqueness: true, length: { maximum: 255 }
   validates :description, length: { maximum: 1000 }, allow_blank: true
   validates :state, presence: true
   validates :eye_catch, attachment: { purge: true, content_type: %r{\Aimage/(png|jpeg)\Z}, maximum: 10_485_760 }
+  validates :eyecatch_width, allow_blank: true, numericality: { only_integer: true, greater_than_or_equal_to: 100, less_than_or_equal_to: 700 }
 
   with_options if: :published? do
     validates :slug, slug_format: true, presence: true, length: { maximum: 255 }
@@ -111,5 +113,13 @@ class Article < ApplicationRecord
 
   def change_state
     self.state = publishable? ? :published : :publish_wait
+  end
+
+  def eyecatch_resize
+    if eyecatch_width?
+      eye_catch_url.variant(resize: eyecatch_width)
+    else
+      eye_catch_url.variant(resize: '300')
+    end
   end
 end

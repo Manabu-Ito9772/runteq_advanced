@@ -15,6 +15,10 @@ ja:
         draft: '下書き'
         published: '公開'
         publish_wait: '公開待ち'
+      eyecatch_position:
+        eyecatch_center: '中央揃え'
+        eyecatch_left: '左寄せ'
+        eyecatch_right: '右寄せ'
     medium:
       media_type:
         image: '画像'
