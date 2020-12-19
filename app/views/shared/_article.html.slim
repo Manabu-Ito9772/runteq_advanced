@@ -7,12 +7,14 @@
 
   - if article.eye_catch.attached?
     .mx-auto
-      section.eye_catch
-        - if article.eyecatch_center?
+      - if article.eyecatch_center?
+        section.eye_catch.text-center
           = image_tag article.eyecatch_resize, class: 'd-block mx-auto img-fluid'
-        - elsif article.eyecatch_right?
+      - elsif article.eyecatch_right?
+        section.eye_catch.text-right
           = image_tag article.eyecatch_resize, class: 'd-block ml-auto img-fluid'
-        - else
+      - else
+        section.eye_catch.text-left
           = image_tag article.eyecatch_resize, class: 'img-fluid'
 
   - if article.category.present?
