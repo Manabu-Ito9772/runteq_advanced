@@ -1,5 +1,14 @@
-header.jumbotron.jumbotron-fluid
+/header.jumbotron.jumbotron-fluid
   .container
     h1 = link_to current_site.name, root_path
-    p.lead = current_site.subtitle
+    p.lead = current_site.subtitle/
 
+.swiper-container
+  .swiper-wrapper
+    - current_site.main_images.each do |image|
+      .swiper-slide
+        = image_tag image, class: 'swiper-image'
+
+.position-abosolute
+  h1 = link_to current_site.name, root_path
+  p.lead = current_site.subtitle

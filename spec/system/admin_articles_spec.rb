@@ -135,7 +135,6 @@ RSpec.describe "AdminArticles", type: :system do
       it '権限エラーが発生した場合403エラーページを返す' do
         visit admin_categories_path
         expect(page).to have_content('権限がありません')
-        page.save_screenshot 'screenshot.png'
       end
     end
   end
