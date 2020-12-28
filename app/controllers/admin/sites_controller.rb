@@ -18,13 +18,7 @@ class Admin::SitesController < ApplicationController
   end
 
   def delete_image
-    if params[:type] == 'favicon'
-      @site.favicon&.purge
-    elsif params[:type] == 'og_image'
-      @site.og_image&.purge
-    elsif params[:type] == 'main_images'
-      @site.main_images.find(params[:blob_id])&.purge
-    end
+    ActiveStorage::Attachment.find(params[:id]).purge
     redirect_to edit_admin_site_path
   end
 

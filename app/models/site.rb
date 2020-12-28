@@ -20,5 +20,4 @@ class Site < ApplicationRecord
   validates :description, length: { maximum: 400 }
   validates :og_image, attachment: { purge: true, content_type: %r{\Aimage/(png|jpeg)\Z}, maximum: 524_288_000 }
   validates :favicon, attachment: { purge: true, content_type: %r{\Aimage/png\Z}, maximum: 524_288_000 }
-  validates :main_images, attachment: { purge: true }
 end

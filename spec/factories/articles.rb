@@ -58,6 +58,10 @@ FactoryBot.define do
       published_at { DateTime.now.ago(1.hours) }
     end
 
+    trait :published_yersterday do
+      published_at { DateTime.now.yesterday }
+    end
+
     trait :with_sentence do
       transient do
         sequence(:sentence_body) { |n| "test_body_#{n}" }

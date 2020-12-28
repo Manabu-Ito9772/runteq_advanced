@@ -15,34 +15,29 @@
 
 @import 'swiper/swiper-bundle';
 
-.swiper-image {
-  width: 100%;
-  height: 230px;
-  object-fit: cover;
+header {
+  position: relative;
   margin-bottom: 32px;
-  z-index: 1;
-}
 
-.position-abosolute {
-  position: absolute;
-  top: 64px;
-  left: 80px;
-  color: white;
-  a {
-    color: white;
+  .swiper-image {
+    width: 100%;
+    height: 230px;
+    object-fit: cover;
+    z-index: 1;
   }
-  z-index: 2;
-}
 
-// .jumbotron {
-//   background: url('/images/cover.jpg') center / cover;
-//   color: white;
-//
-//   a {
-//     color: white;
-//   }
-//   height: 230px;
-// }
+  .position-abosolute {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 50px;
+    color: white;
+    a {
+      color: white;
+    }
+    z-index: 10;
+  }
+}
 
 .page-content {
   padding-bottom: 80px;

@@ -69,6 +69,7 @@ class Article < ApplicationRecord
   scope :title_contain, ->(word) { where('title LIKE ?', "%#{word}%") }
   scope :body_contain, ->(word) { joins(:sentences).merge(Sentence.where('sentences.body LIKE ?', "%#{word}%")) }
   scope :past_published, -> { where('published_at <= ?', Time.current) }
+  scope :published_yesterday, -> { where(published_at: 1.day.ago.all_day) }
 
   def build_body(controller)
     result = ''
